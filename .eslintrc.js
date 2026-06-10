@@ -42,6 +42,7 @@ module.exports = {
     'comma-dangle': 0,
     'space-in-parens': 0,
     'standard/object-curly-even-spacing': 0,
+    quotes: 'off'
   },
   parserOptions: {
     parser: '@typescript-eslint/parser'

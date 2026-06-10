@@ -97,7 +97,7 @@ const router = new Router({
             hidden: true
           }
         },
-        
+
         {
           path: "category",
           component: () =>
@@ -116,7 +116,7 @@ const router = new Router({
             icon: "icon-employee"
           }
         },
-        
+
         {
           path: "/employee/add",
           component: () =>
@@ -126,7 +126,7 @@ const router = new Router({
             hidden: true
           }
         },
-        
+
         {
           path: "/setmeal/add",
           component: () =>

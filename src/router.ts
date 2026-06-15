@@ -51,8 +51,7 @@ const router = new Router({
             icon: "dashboard",
             affix: true
           }
-        },
-		{
+        }, {
           path: "/statistics",
           component: () =>
             import(/* webpackChunkName: "shopTable" */ "@/views/statistics/index.vue"),

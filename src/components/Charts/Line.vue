@@ -17,6 +17,7 @@ import ResizeMixin from './mixins/resize';
         'name': 'LineChart'
     })
 export default class extends mixins(ResizeMixin) {
+        // 这些 props 由父组件传入，用来控制图表容器和标题。
         @Prop({ 'default': 'chart' }) private className!: string
         @Prop({ 'default': 'chart' }) private id!: string
         @Prop({ 'default': '100%' }) private width!: string
@@ -30,6 +31,7 @@ export default class extends mixins(ResizeMixin) {
         }
 
         private initChart() {
+            // ECharts 必须绑定一个真实 DOM 节点，所以这里通过 id 找到 template 中的 div。
             this.chart = echarts.init(document.getElementById(this.id) as HTMLDivElement);
             this.chart.setOption({
                 'backgroundColor': '#fff',

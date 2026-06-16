@@ -1,11 +1,11 @@
 import request from '@/utils/request';
-/**
- *
- * 分类管理
- *
- **/
 
-// 查询分类列表接口
+/**
+ * 分类管理接口。
+ * 分类一般分为“菜品分类”和“套餐分类”，页面通过 type 字段区分。
+ */
+
+// 查询分类分页列表。
 export const getCategoryPage = (params: any) => {
   return request({
     url: '/category/page',
@@ -14,7 +14,7 @@ export const getCategoryPage = (params: any) => {
   });
 };
 
-// 删除当前列的接口
+// 删除分类。当前接口参数名是 id，调用方传入 ids 字符串。
 export const deleCategory = (ids: string) => {
   return request({
     url: '/category',
@@ -23,7 +23,7 @@ export const deleCategory = (ids: string) => {
   });
 };
 
-// 修改接口
+// 修改分类名称、排序、类型等信息。
 export const editCategory = (params: any) => {
   return request({
     url: '/category',
@@ -32,7 +32,7 @@ export const editCategory = (params: any) => {
   });
 };
 
-// 新增接口
+// 新增分类。
 export const addCategory = (params: any) => {
   return request({
     url: '/category',
@@ -41,7 +41,7 @@ export const addCategory = (params: any) => {
   });
 };
 
-// 修改---启用禁用接口
+// 启用/禁用分类。status 放在路径里，分类 id 放在查询参数里。
 export const enableOrDisableEmployee = (params: any) => {
   return request({
     url: `/category/status/${params.status}`,

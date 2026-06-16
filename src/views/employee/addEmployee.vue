@@ -1,14 +1,16 @@
 <template>
   <div class="addBrand-container">
     <HeadLable :title="title"
-               :goback="true" />
+               :goback="true"
+    />
     <div class="container">
       <el-form ref="ruleForm"
                :model="ruleForm"
                :rules="rules"
                :inline="false"
                label-width="180px"
-               class="demo-ruleForm">
+               class="demo-ruleForm"
+      >
         <!--          <el-form-item label="员工职级" prop="region">-->
         <!--            <el-select v-model="ruleForm.region" placeholder="请选择品牌名称">-->
         <!--              <el-option label="区域一" value="shanghai"></el-option>-->
@@ -17,16 +19,20 @@
         <!--            <el-button @click="submitForm('ruleForm')" type="primary" class="continue" style="margin-left: 10px;" >+新增职级</el-button>-->
         <!--          </el-form-item>-->
         <el-form-item label="账号:"
-                      prop="username">
+                      prop="username"
+        >
           <el-input v-model="ruleForm.username"
                     placeholder="请输入账号"
-                    maxlength="20" />
+                    maxlength="20"
+          />
         </el-form-item>
         <el-form-item label="员工姓名:"
-                      prop="name">
+                      prop="name"
+        >
           <el-input v-model="ruleForm.name"
                     placeholder="请输入员工姓名"
-                    maxlength="12" />
+                    maxlength="12"
+          />
         </el-form-item>
         <!-- <el-form-item
           label="密码:"
@@ -51,13 +57,16 @@
           />
         </el-form-item> -->
         <el-form-item label="手机号:"
-                      prop="phone">
+                      prop="phone"
+        >
           <el-input v-model="ruleForm.phone"
                     placeholder="请输入手机号"
-                    maxlength="11" />
+                    maxlength="11"
+          />
         </el-form-item>
         <el-form-item label="性别:"
-                      prop="sex">
+                      prop="sex"
+        >
           <el-radio-group v-model="ruleForm.sex">
             <el-radio label="男" />
             <el-radio label="女" />
@@ -65,10 +74,12 @@
         </el-form-item>
         <el-form-item label="身份证号:"
                       prop="idNumber"
-                      class="idNumber">
+                      class="idNumber"
+        >
           <el-input v-model="ruleForm.idNumber"
                     placeholder="请输入身份证号"
-                    maxlength="20" />
+                    maxlength="20"
+          />
         </el-form-item>
         <div class="subBox address">
           <!-- <el-form-item> -->
@@ -77,12 +88,14 @@
           </el-button>
           <el-button type="primary"
                      :class="{ continue: actionType === 'add' }"
-                     @click="submitForm('ruleForm', false)">
+                     @click="submitForm('ruleForm', false)"
+          >
             保存
           </el-button>
           <el-button v-if="actionType == 'add'"
                      type="primary"
-                     @click="submitForm('ruleForm', true)">
+                     @click="submitForm('ruleForm', true)"
+          >
             保存并继续添加
           </el-button>
           <!-- </el-form-item> -->
@@ -104,8 +117,10 @@ import { queryEmployeeById, addEmployee, editEmployee } from '@/api/employee'
   }
 })
 export default class extends Vue {
+  // title/actionType 决定当前页面是“添加员工”还是“修改员工信息”。
   private title = '添加员工'
   private actionType = ''
+  // ruleForm 是 Element UI 表单绑定的数据对象。
   private ruleForm = {
     name: '',
     phone: '',
@@ -126,6 +141,7 @@ export default class extends Vue {
   //   }
   // }
 
+  // 手机号格式校验。
   private isCellPhone(val: any) {
     if (!/^1(3|4|5|6|7|8)\d{9}$/.test(val)) {
       return false
@@ -146,6 +162,7 @@ export default class extends Vue {
     }
   }
 
+  // 身份证号格式校验。
   private validID(rule: any, value: any, callback: any) {
     // 身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X
     let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
@@ -159,6 +176,7 @@ export default class extends Vue {
   }
 
   get rules() {
+    // 表单校验规则，和 template 里 el-form-item 的 prop 一一对应。
     return {
       name: [
         {
@@ -205,6 +223,7 @@ export default class extends Vue {
   }
 
   created() {
+    // URL 上有 id 表示编辑员工；没有 id 表示新增员工。
     this.actionType = this.$route.query.id ? 'edit' : 'add'
     if (this.$route.query.id) {
       this.title = '修改员工信息'
@@ -213,6 +232,7 @@ export default class extends Vue {
   }
 
   private async init() {
+    // 编辑模式下先根据 id 查询员工详情，再回填表单。
     const id = this.$route.query.id
     queryEmployeeById(id).then((res: any) => {
       // String(res.status) === '200'
@@ -235,9 +255,11 @@ export default class extends Vue {
   }
 
   private submitForm(formName: any, st: any) {
-    ;(this.$refs[formName] as any).validate((valid: any) => {
+    // 先执行 Element UI 表单校验；校验通过后才调用新增/编辑接口。
+    (this.$refs[formName] as any).validate((valid: any) => {
       if (valid) {
         if (this.actionType === 'add') {
+          // 页面里性别显示中文，后端需要 0/1，所以提交前转换。
           const params = {
             ...this.ruleForm,
             sex: this.ruleForm.sex === '女' ? '0' : '1'
@@ -267,6 +289,7 @@ export default class extends Vue {
               // this.$message.error('请求出错了：' + err.message)
             })
         } else {
+          // 编辑员工也需要把性别转回后端需要的格式。
           const params = {
             ...this.ruleForm,
             sex: this.ruleForm.sex === '女' ? '0' : '1'

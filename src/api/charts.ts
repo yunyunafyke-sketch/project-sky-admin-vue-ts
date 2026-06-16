@@ -1,9 +1,9 @@
 import request from '@/utils/request'
+
 /**
- *
- * 报表数据
- *
- **/
+ * 图表报表接口。
+ * 这些函数通常给 ECharts 图表组件提供数据。
+ */
 
 // 获取当日销售数据 -> 顶部数据
 export const getDataes = (params: any) =>

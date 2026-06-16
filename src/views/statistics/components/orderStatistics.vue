@@ -1,27 +1,37 @@
 <template>
   <div class="container">
-    <h2 class="homeTitle">订单统计</h2>
+    <h2 class="homeTitle">
+      订单统计
+    </h2>
     <div class="charBox">
       <div class="orderProportion">
         <div>
           <p>订单完成率</p>
           <p>{{ (orderdata.orderCompletionRate * 100).toFixed(1) }}%</p>
         </div>
-        <div class="symbol">=</div>
+        <div class="symbol">
+          =
+        </div>
         <div>
           <p>有效订单</p>
           <p>{{ orderdata.validOrderCount }}</p>
         </div>
-        <div class="symbol">/</div>
+        <div class="symbol">
+          /
+        </div>
         <div>
           <p>订单总数</p>
           <p>{{ orderdata.totalOrderCount }}</p>
         </div>
       </div>
-      <div id="ordermain" style="width: 100%; height: 300px"></div>
+      <div id="ordermain" style="width: 100%; height: 300px" />
       <ul class="orderListLine">
-        <li class="one"><span></span>订单总数（个）</li>
-        <li class="three"><span></span>有效订单（个）</li>
+        <li class="one">
+          <span />订单总数（个）
+        </li>
+        <li class="three">
+          <span />有效订单（个）
+        </li>
       </ul>
     </div>
   </div>
@@ -34,16 +44,20 @@ import * as echarts from 'echarts'
   name: 'OrderStatistics',
 })
 export default class extends Vue {
+  // 父组件传入的订单统计折线图数据。
   @Prop() private orderdata!: any
+  // 父组件传入的概览数据，包含总订单数、有效订单数、完成率等。
   @Prop() private overviewData!: any
 
   @Watch('orderdata')
+  // 图表数据变化时重新渲染 ECharts。
   getData() {
     this.$nextTick(() => {
       this.initChart()
     })
   }
   initChart() {
+    // 初始化订单统计图表。
     type EChartsOption = echarts.EChartsOption
     const chartDom = document.getElementById('ordermain') as any
     const myChart = echarts.init(chartDom)

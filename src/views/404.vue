@@ -57,6 +57,7 @@ import { Component, Vue } from 'vue-property-decorator';
     'name': 'Page404'
 })
 export default class extends Vue {
+  // 404 页面展示的提示文案。
   private message = '404 Page Not Found'
 }
 </script>

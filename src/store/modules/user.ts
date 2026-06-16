@@ -4,6 +4,8 @@ import { getToken, setToken, removeToken,getStoreId, setStoreId, removeStoreId, 
 import store from '@/store'
 import Cookies from 'js-cookie'
 import { Message } from 'element-ui'
+
+// IUserState 描述用户模块里保存了哪些全局用户信息。
 export interface IUserState {
   token: string
   name: string
@@ -15,8 +17,10 @@ export interface IUserState {
   username: string
 }
 
+// user 模块负责登录态、用户信息、角色和门店信息。
 @Module({ 'dynamic': true, store, 'name': 'user' })
 class User extends VuexModule implements IUserState {
+  // 刷新页面后 Vuex 会丢失内存状态，所以 token/username 需要从 Cookie 恢复。
   public token = getToken() || ''
   public name = ''
   public avatar = ''
@@ -27,6 +31,7 @@ class User extends VuexModule implements IUserState {
   public roles: string[] = []
   public username = Cookies.get('username') || ''
 
+  // SET_* 这类方法都是 Mutation：只做同步赋值，方便追踪状态变化。
   @Mutation
   private SET_TOKEN(token: string) {
     this.token = token
@@ -66,6 +71,7 @@ class User extends VuexModule implements IUserState {
     this.username = name
     }
 
+  // Login 是登录动作：先调后端接口，成功后把 token 和用户信息存到 Vuex/Cookie。
   @Action
   public async Login(userInfo: { username: string, password: string }) {
     let { username, password } = userInfo
@@ -91,6 +97,7 @@ class User extends VuexModule implements IUserState {
     }
   }
 
+  // 清空前端保存的登录凭证，通常用于登录失效或手动退出后的状态重置。
   @Action
   public ResetToken () {
     removeToken()
@@ -106,6 +113,8 @@ class User extends VuexModule implements IUserState {
     setToken(data.authorization)
   }
 
+  // 从 Cookie 中恢复用户信息，并同步到 Vuex。
+  // 注意：这里依赖 getUserInfo() 返回的是 JSON 字符串。
   @Action
   public async GetUserInfo () {
     if (this.token === '') {
@@ -130,6 +139,7 @@ class User extends VuexModule implements IUserState {
     this.SET_INTRODUCTION(introduction)
   }
 
+  // 退出登录：通知后端退出，再清理前端 Cookie 和 Vuex 状态。
   @Action
   public async LogOut () {
     const { data } = await userLogout({})

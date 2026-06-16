@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="login-box">
-      <img src="@/assets/login/login-l.png" alt="" />
+      <img src="@/assets/login/login-l.png" alt="">
       <div class="login-form">
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
           <div class="login-form-title">
@@ -9,7 +9,7 @@
               src="@/assets/login/icon_logo.png"
               style="width: 149px; height: 38px"
               alt=""
-            />
+            >
             <!-- <span class="title-label">苍穹外卖</span> -->
           </div>
           <el-form-item prop="username">
@@ -60,6 +60,7 @@ import { isValidUsername } from '@/utils/validate'
   name: 'Login',
 })
 export default class extends Vue {
+  // Element UI 表单自定义校验：callback() 表示通过，callback(new Error(...)) 表示不通过。
   private validateUsername = (rule: any, value: string, callback: Function) => {
     if (!value) {
       callback(new Error('请输入用户名'))
@@ -67,6 +68,8 @@ export default class extends Vue {
       callback()
     }
   }
+
+  // 密码至少 6 位；这里只做前端基础校验，真正安全校验还要靠后端。
   private validatePassword = (rule: any, value: string, callback: Function) => {
     if (value.length < 6) {
       callback(new Error('密码必须在6位以上'))
@@ -74,6 +77,8 @@ export default class extends Vue {
       callback()
     }
   }
+
+  // 登录表单数据。v-model 会把输入框内容同步到这里。
   private loginForm = {
     username: 'admin',
     password: '123456',
@@ -82,10 +87,12 @@ export default class extends Vue {
     password: String
   }
 
+  // Element UI 表单规则，prop="username/password" 会对应这里的字段。
   loginRules = {
     username: [{ validator: this.validateUsername, trigger: 'blur' }],
     password: [{ validator: this.validatePassword, trigger: 'blur' }],
   }
+  // loading 控制登录按钮是否显示“登录中...”。
   private loading = false
   private redirect?: string
 
@@ -94,12 +101,14 @@ export default class extends Vue {
 
   // 登录
   private handleLogin() {
+    // 先做前端表单校验，通过后再调用 Vuex 的 Login action。
     (this.$refs.loginForm as ElForm).validate(async (valid: boolean) => {
       if (valid) {
         this.loading = true
         await UserModule.Login(this.loginForm as any)
           .then((res: any) => {
             if (String(res.code) === '1') {
+              // 登录成功后进入后台首页，/ 会在 router.ts 中重定向到 /dashboard。
               this.$router.push('/')
             } else {
               // this.$message.error(res.msg)

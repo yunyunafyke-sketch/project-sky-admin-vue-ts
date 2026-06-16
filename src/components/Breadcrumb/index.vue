@@ -31,10 +31,12 @@ import { RouteRecord, Route } from 'vue-router'
 })
 
 export default class extends Vue {
+  // breadcrumbs 保存当前路由匹配到的面包屑节点。
   private breadcrumbs: RouteRecord[] = []
+
   @Watch('$route')
   private onRouteChange(route: Route) {
-    // if you go to the redirect page, do not update the breadcrumbs
+    // 进入 redirect 这类中间页面时，不更新面包屑。
     if (route.path.startsWith('/redirect/')) {
       return
     }
@@ -47,6 +49,7 @@ export default class extends Vue {
   }
 
   private getBreadcrumb () {
+    // this.$route.matched 是当前地址命中的所有父子路由记录。
     let matched = this.$route.matched.filter(
       item => item.meta && item.meta.title
     )
@@ -67,13 +70,14 @@ export default class extends Vue {
   }
 
   private pathCompile (path: string) {
-    // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
+    // 动态路由里可能有 /xxx/:id，这里把 params 编译进真实路径。
     const { params } = this.$route
     const toPath = pathToRegexp.compile(path)
     return toPath(params)
   }
 
   private handleLink (item: any) {
+    // 点击非最后一级面包屑时，如果有 redirect 就跳 redirect，否则跳自己的 path。
     const { redirect, path } = item
     if (redirect) {
       this.$router.push(redirect)

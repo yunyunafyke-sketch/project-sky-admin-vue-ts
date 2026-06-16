@@ -1,5 +1,6 @@
 <template>
   <div class="HeadLable">
+    <!-- goback 为 true 时显示返回按钮。 -->
     <span
       v-if="goback"
       class="goBack"
@@ -8,6 +9,7 @@
       src="@/assets/icons/btn_back@2x.png"
       alt=""
     > 返回</span>
+    <!-- 默认显示标题；butList 为 true 时改由插槽展示按钮区域。 -->
     <span v-if="!butList">{{ title }}</span>
     <div v-if="butList">
       <slot />
@@ -22,8 +24,11 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   'name': 'Hamburger'
 })
 export default class extends Vue {
+  // 是否显示返回按钮。
   @Prop({ 'default': false }) private goback!: boolean
+  // 是否使用 slot 自定义右侧按钮区域。
   @Prop({ 'default': false }) private butList!: boolean
+  // 页面标题。
   @Prop({ 'default': '集团管理' }) private title!: string
 
   private toggleClick() {
@@ -31,6 +36,7 @@ export default class extends Vue {
   }
 
   private goBack() {
+    // 回到浏览器历史记录里的上一个页面。
     this.$router.go(-1)
   }
 }

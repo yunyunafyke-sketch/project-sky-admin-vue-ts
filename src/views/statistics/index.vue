@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container home">
     <!-- 标题 -->
-    <TitleIndex @sendTitleInd="getTitleNum" :flag="flag" :tateData="tateData" />
+    <TitleIndex :flag="flag" :tate-data="tateData" @sendTitleInd="getTitleNum" />
     <!-- end -->
     <div class="homeMain">
       <!-- 营业额统计 -->
@@ -13,7 +13,7 @@
     </div>
     <div class="homeMain homecon">
       <!-- 订单统计 -->
-      <OrderStatistics :orderdata="orderData" :overviewData="overviewData" />
+      <OrderStatistics :orderdata="orderData" :overview-data="overviewData" />
       <!-- end -->
       <!-- 销量排名TOP10 -->
       <Top :top10data="top10Data" />
@@ -60,7 +60,9 @@ import Top from './components/top10.vue'
   },
 })
 export default class extends Vue {
+  // 统计页的数据按图表模块拆分保存。
   private overviewData = {} as any
+  // flag 表示当前选中的时间范围，默认 2 是近 7 日。
   private flag = 2
   private tateData = []
   private turnoverData = {} as any
@@ -73,8 +75,10 @@ export default class extends Vue {
     //this.init(this.flag)
     this.getTitleNum(2);
   }
+
   // 获取基本数据
   init(begin: any,end:any) {
+    // 时间范围确定后，同时刷新所有统计图表。
     this.$nextTick(() => {
       this.getTurnoverStatisticsData(begin,end)
       this.getUserStatisticsData(begin,end)
@@ -138,6 +142,7 @@ export default class extends Vue {
   }
   // 获取当前选中的tab时间
   getTitleNum(data) {
+    // 标题组件传来的数字决定日期范围，再用该范围刷新图表。
     switch (data) {
       case 1:
         this.tateData = get1stAndToday()

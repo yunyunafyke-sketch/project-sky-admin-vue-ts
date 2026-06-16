@@ -16,8 +16,7 @@
         :key="ind"
         class="items"
         @click="checkOption(it, ind)"
-        >{{ it.name }}</span
-      >
+      >{{ it.name }}</span>
       <span v-if="dishFlavorsData == []" class="none">无数据</span>
     </div>
   </div>
@@ -30,19 +29,25 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   name: 'selectInput',
 })
 export default class extends Vue {
+  // 当前已经选择的口味数据。
   @Prop({ default: [] }) private selectFlavorsData!: []
+  // 全部可选口味数据。
   @Prop({ default: [] }) private dishFlavorsData!: []
+  // 当前选中的值。
   @Prop({ default: '' }) private value!: number
+  // 当前组件在父级口味列表中的下标。
   @Prop({ default: 0 }) private index!: number
   private keyValue = NaN
 
   private mak: boolean = false
 
   private selectFlavor(st: boolean) {
+    // 打开/关闭口味下拉选择面板。
     this.mak = st
   }
 
   private outSelect(st: boolean) {
+    // 延迟关闭，给点击下拉项留出时间。
     const _this = this
     setTimeout(function () {
       _this.mak = st
@@ -50,10 +55,12 @@ export default class extends Vue {
   }
 
   private inputHandle(val: any) {
+    // 当前模板中未直接使用，保留给输入选择场景。
     this.selectFlavor(false)
   }
 
   checkOption(val: any, ind: any) {
+    // 选择口味后通知父组件，父组件负责更新 dishFlavors。
     this.$emit('select', val.name, this.index, ind)
     this.keyValue = val.name
   }

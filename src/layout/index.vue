@@ -1,13 +1,17 @@
 <template>
   <div :class="classObj" class="app-wrapper">
+    <!-- 移动端展开侧边栏时显示遮罩，点击遮罩关闭侧边栏。 -->
     <div
       v-if="classObj.mobile && sidebar.opened"
       class="drawer-bg"
       @click="handleClickOutside"
     />
+    <!-- 左侧菜单。 -->
     <sidebar class="sidebar-container" />
     <div class="main-container">
+      <!-- 顶部栏。 -->
       <navbar />
+      <!-- 中间内容区，真正的页面会显示在 AppMain 里的 router-view 中。 -->
       <app-main />
     </div>
   </div>
@@ -22,6 +26,7 @@ import ResizeMixin from './mixin/resize'
 
 @Component({
   name: 'Layout',
+  // 注册后，template 中才能使用 <app-main>、<navbar>、<sidebar>。
   components: {
     AppMain,
     Navbar,
@@ -29,6 +34,7 @@ import ResizeMixin from './mixin/resize'
   },
 })
 export default class extends mixins(ResizeMixin) {
+  // classObj 会变成 app-wrapper 上的动态 class，控制侧边栏展开/收起和移动端布局。
   get classObj() {
     return {
       hideSidebar: !this.sidebar.opened,
@@ -38,6 +44,7 @@ export default class extends mixins(ResizeMixin) {
     }
   }
 
+  // 点击移动端遮罩时关闭侧边栏。
   private handleClickOutside() {
     AppModule.CloseSideBar(false)
   }

@@ -1,12 +1,13 @@
-<!--  -->
 <template>
   <div class="empty-box">
     <div class="img-box">
       <img v-if="!isSearch"
            src="../../assets/table_empty.png"
-           alt="">
+           alt=""
+      >
       <img v-else
-           src="../../assets/search_table_empty.png">
+           src="../../assets/search_table_empty.png"
+      >
       <p>{{ !isSearch ? '这里空空如也~' : 'Sorry，木有找到您搜索的内容哦~' }}</p>
     </div>
   </div>
@@ -18,7 +19,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   name: 'Empty'
 })
 export default class extends Vue {
-  @Prop({ default: false }) isSearch: boolean //用来区分是搜索还是默认无数据
+  // isSearch 用来区分“列表本来为空”和“搜索没有结果”两种文案/图片。
+  @Prop({ default: false }) isSearch: boolean
 }
 </script>
 <style scoped lang="scss">

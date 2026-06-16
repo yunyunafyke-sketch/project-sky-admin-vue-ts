@@ -6,16 +6,16 @@
     <div class="orderviewBox">
       <ul>
         <li>
-          <span class="status"><i class="iconfont icon-open"></i>已启售</span>
+          <span class="status"><i class="iconfont icon-open" />已启售</span>
           <span class="num">{{ dishesData.sold }}</span>
         </li>
         <li>
-          <span class="status"><i class="iconfont icon-stop"></i>已停售</span>
+          <span class="status"><i class="iconfont icon-stop" />已停售</span>
           <span class="num">{{ dishesData.discontinued }}</span>
         </li>
         <li class="add">
           <router-link to="/dish/add">
-            <i></i>
+            <i />
             <p>新增菜品</p>
           </router-link>
         </li>
@@ -32,6 +32,7 @@ import orderList from './orderList.vue'
   name: 'cuisineview',
 })
 export default class extends Vue {
+  // 父组件传入的菜品总览数据。
   @Prop() private dishesData!: any
 }
 </script>

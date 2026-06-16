@@ -1,8 +1,10 @@
 <template>
   <div class="container">
-    <h2 class="homeTitle">营业额统计</h2>
+    <h2 class="homeTitle">
+      营业额统计
+    </h2>
     <div class="charBox">
-      <div id="main" style="width: 100%; height: 320px"></div>
+      <div id="main" style="width: 100%; height: 320px" />
       <ul class="orderListLine turnover">
         <li>营业额(元)</li>
       </ul>
@@ -17,14 +19,17 @@ import * as echarts from 'echarts'
   name: 'TurnoverStatistics',
 })
 export default class extends Vue {
+  // 父组件传入的营业额折线图数据。
   @Prop() private turnoverdata!: any
   @Watch('turnoverdata')
+  // 数据变化时重新渲染营业额图表。
   getData() {
     this.$nextTick(() => {
       this.initChart()
     })
   }
   initChart() {
+    // 初始化营业额折线图。
     type EChartsOption = echarts.EChartsOption
     const chartDom = document.getElementById('main') as any
     const myChart = echarts.init(chartDom)

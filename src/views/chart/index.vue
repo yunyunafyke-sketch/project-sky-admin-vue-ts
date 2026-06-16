@@ -2,26 +2,16 @@
   <div class="dashboard-container">
     <HeadLable :but-list="true">
       <div class="headBut">
-        <span :class="{ act: act === 'day' }" @click="dateAct('day')"
-          >日报</span
-        >
-        <span :class="{ act: act === 'week' }" @click="dateAct('week')"
-          >周报</span
-        >
-        <span :class="{ act: act === 'mouth' }" @click="dateAct('mouth')"
-          >月报</span
-        >
+        <span :class="{ act: act === 'day' }" @click="dateAct('day')">日报</span>
+        <span :class="{ act: act === 'week' }" @click="dateAct('week')">周报</span>
+        <span :class="{ act: act === 'mouth' }" @click="dateAct('mouth')">月报</span>
       </div>
     </HeadLable>
     <div class="topLable">
       <div class="tit">
         <span v-if="act === 'day'">统计时间：00：00 - 24：00</span>
-        <span v-if="act === 'week'"
-          >统计时间：{{ stateTime }} -{{ endTime }}</span
-        >
-        <span v-if="act === 'mouth'"
-          >统计时间：{{ stateTime }} -{{ endTime }}</span
-        >
+        <span v-if="act === 'week'">统计时间：{{ stateTime }} -{{ endTime }}</span>
+        <span v-if="act === 'mouth'">统计时间：{{ stateTime }} -{{ endTime }}</span>
       </div>
       <div v-if="act === 'day'" class="dataSelect">
         <div>
@@ -86,7 +76,7 @@
               width="45"
               height="43"
               alt=""
-            />
+            >
           </div>
           <div class="item">
             <div>实收金额</div>
@@ -96,7 +86,7 @@
         </div>
         <div class="box noData">
           <div class="icon">
-            <img src="./../../assets/icons/jine_m-2@2x.png" width="50" alt="" />
+            <img src="./../../assets/icons/jine_m-2@2x.png" width="50" alt="">
           </div>
           <div class="item">
             <div>未收金额</div>
@@ -106,7 +96,7 @@
         </div>
         <div class="box employee">
           <div class="icon">
-            <img src="./../../assets/icons/renshu@2x.png" width="46" alt="" />
+            <img src="./../../assets/icons/renshu@2x.png" width="46" alt="">
           </div>
           <div class="item">
             <div>就餐人数</div>
@@ -120,13 +110,11 @@
           <span
             :class="{ butAct: typeA == 1 }"
             @click="topActiveHandle('typeA')"
-            >按金额</span
-          >
+          >按金额</span>
           <span
             :class="{ butAct: typeA == 2 }"
             @click="topActiveHandle('typeA')"
-            >按单数</span
-          >
+          >按单数</span>
         </div>
         <Basic
           v-if="chartDataA"
@@ -143,13 +131,11 @@
             <span
               :class="{ butAct: typeB == 1 }"
               @click="topActiveHandle('typeB')"
-              >按金额</span
-            >
+            >按金额</span>
             <span
               :class="{ butAct: typeB == 2 }"
               @click="topActiveHandle('typeB')"
-              >按销量</span
-            >
+            >按销量</span>
           </div>
           <BarChart :chart-data="chartDataC" title="菜品分类占比" />
         </div>
@@ -164,15 +150,14 @@
           <BarChart id="bar" :chart-data="chartDataD" title="店内收款构成" />
         </div>
         <div class="itemList">
-          <div class="title">优惠指标</div>
+          <div class="title">
+            优惠指标
+          </div>
           <div class="item topLab">
-            <span>优惠合计</span><span>{{ discountTotal / 100 }}元</span
-            ><span>{{ discountPercentTotal * 100 }}%</span>
+            <span>优惠合计</span><span>{{ discountTotal / 100 }}元</span><span>{{ discountPercentTotal * 100 }}%</span>
           </div>
           <div v-for="(item, index) in discount" :key="index" class="item">
-            <span>{{ item.name }}</span
-            ><span>{{ item.value / 100 }}元</span
-            ><span>{{ item.percent * 100 }}%</span>
+            <span>{{ item.name }}</span><span>{{ item.value / 100 }}元</span><span>{{ item.percent * 100 }}%</span>
           </div>
         </div>
       </div>
@@ -214,6 +199,7 @@ import request from '@/utils/request'
   },
 })
 export default class extends Vue {
+  // dataTime 是当前选中的日期，stateTime/endTime 是请求接口用的开始/结束日期。
   private dataTime: any = ''
   private restKey = 0
   private moment = moment
@@ -229,8 +215,9 @@ export default class extends Vue {
   private topData = {}
   private stateTime = moment().format('YYYY-MM-DD')
   private endTime = moment().format('YYYY-MM-DD')
+  // act 控制当前查看日/周/月。
   private act = 'day'
-  private dataType = 1 //类型(1:金额;2:数量)
+  private dataType = 1 // 类型(1:金额;2:数量)
   private typeA = 1
   private typeB = 1
   private chartDataA = {} // 销售趋势
@@ -247,6 +234,7 @@ export default class extends Vue {
   }
 
   private async init() {
+    // 默认进入页面展示今天的数据。
     this.dataTime = this.Today
     this.stateTime = this.Today
     this.endTime = this.Today
@@ -255,6 +243,7 @@ export default class extends Vue {
   }
 
   private checkaffterDate(val: any, st: any) {
+    // 前一天/后一天下翻日期，同时支持周和月维度。
     const date = moment(this.dataTime).valueOf()
     if (st == 'before') {
       // 前一天、周、月
@@ -306,6 +295,7 @@ export default class extends Vue {
 
   // 日期选择
   private changeDate(val: string) {
+    // 根据日/周/月把 dataTime 转换成接口需要的开始/结束时间。
     if (this.stateTime == '' || this.endTime == '' || this.dataTime == null) {
       this.$message.error('检索日期不能为空！')
       this.dataTime = moment().format('YYYY-MM-DD')
@@ -348,6 +338,7 @@ export default class extends Vue {
 
   // 日 周 月 切换
   private dateAct(val: string) {
+    // 切换时间维度时重置日期范围，并重新请求报表数据。
     this.restKey++
     this.act = val
     if (val === 'day') {
@@ -367,6 +358,7 @@ export default class extends Vue {
   }
 
   private topActiveHandle(act: string) {
+    // typeA/typeB 在“金额”和“数量”之间切换。
     if (act === 'typeA') {
       this.typeA = this.typeA === 1 ? 2 : 1
       if (this.act == 'day') {
@@ -390,6 +382,7 @@ export default class extends Vue {
 
   // 获取当天数据
   private getData() {
+    // 当日页面需要同时刷新多个图表模块。
     this.getDayData()
     this.getSalesRankData()
     this.getDayPayTypeData()
@@ -400,6 +393,7 @@ export default class extends Vue {
 
   // 获取当日销售趋势信息 - 销售趋势图
   private getDayData() {
+    // typeA=1 时后端返回金额分，前端展示前转成元。
     getDayDataes({ type: this.typeA, date: this.dataTime })
       .then((res) => {
         if (res.data.code == 200) {
@@ -446,7 +440,7 @@ export default class extends Vue {
           data &&
             data.length > 0 &&
             data.forEach((item: any) => {
-              ;(charts.legendData as Array<string>).push(item.name as string)
+              (charts.legendData as Array<string>).push(item.name as string)
               ;(charts.selected as any)[item.name] = true
             })
           this.chartDataC = charts
@@ -481,7 +475,7 @@ export default class extends Vue {
           data &&
             data.length > 0 &&
             data.forEach((item: any) => {
-              ;(charts.legendData as Array<string>).push(item.name as string)
+              (charts.legendData as Array<string>).push(item.name as string)
               ;(charts.selected as any)[item.name] = true
             })
           this.chartDataD = charts
@@ -631,7 +625,7 @@ export default class extends Vue {
           data &&
             data.length > 0 &&
             data.forEach((item: any) => {
-              ;(charts.legendData as Array<string>).push(item.name as string)
+              (charts.legendData as Array<string>).push(item.name as string)
               ;(charts.selected as any)[item.name] = true
             })
           this.chartDataD = charts
@@ -670,7 +664,7 @@ export default class extends Vue {
           }
           data.length > 0 &&
             data.forEach((item: any) => {
-              ;(charts.legendData as Array<string>).push(item.name as string)
+              (charts.legendData as Array<string>).push(item.name as string)
               ;(charts.selected as any)[item.name] = true
             })
           this.chartDataC = charts

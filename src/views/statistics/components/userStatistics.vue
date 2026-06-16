@@ -1,11 +1,17 @@
 <template>
   <div class="container">
-    <h2 class="homeTitle">用户统计</h2>
+    <h2 class="homeTitle">
+      用户统计
+    </h2>
     <div class="charBox">
-      <div id="usermain" style="width: 100%; height: 320px"></div>
+      <div id="usermain" style="width: 100%; height: 320px" />
       <ul class="orderListLine user">
-        <li class="one"><span></span>用户总量（个）</li>
-        <li class="three"><span></span>新增用户（个）</li>
+        <li class="one">
+          <span />用户总量（个）
+        </li>
+        <li class="three">
+          <span />新增用户（个）
+        </li>
       </ul>
     </div>
   </div>
@@ -18,14 +24,17 @@ import * as echarts from 'echarts'
   name: 'UserStatistics',
 })
 export default class extends Vue {
+  // 父组件传入的用户统计折线图数据。
   @Prop() private userdata!: any
   @Watch('userdata')
+  // 数据变化时重新渲染用户统计图表。
   getData() {
     this.$nextTick(() => {
       this.initChart()
     })
   }
   initChart() {
+    // 初始化用户统计折线图。
     type EChartsOption = echarts.EChartsOption
     const chartDom = document.getElementById('usermain') as any
     const myChart = echarts.init(chartDom)

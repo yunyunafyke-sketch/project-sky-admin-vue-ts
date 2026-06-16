@@ -13,16 +13,18 @@ import { mixins } from 'vue-class-component';
 import ResizeMixin from './mixins/resize';
 import { WatchOptions } from 'vue';
 
-    @Component({
+@Component({
         'name': 'MixedChart'
     })
 
 export default class extends mixins(ResizeMixin) {
+        // 这些 props 由父组件传入，用来控制图表容器和标题。
         @Prop({ 'default': 'chart' }) private className!: string
         @Prop({ 'default': 'mixedChart' }) private id!: string
         @Prop({ 'default': '100%' }) private width!: string
         @Prop({ 'default': '250px' }) private height!: string
         @Prop({ 'default': 'Requests' }) private title!: string
+        // chartData 是图表数据，通常包含 xData/yData。
         @Prop({ 'default': {} }) private chartData!: any
 
         mounted() {
@@ -30,6 +32,7 @@ export default class extends mixins(ResizeMixin) {
         }
 
         @Watch('chartData')
+        // 父组件重新请求到数据后，chartData 变化，图表需要重新渲染。
         private changeData(newVal:string ,oldVal:string){
           this.init()
         }
@@ -41,6 +44,7 @@ export default class extends mixins(ResizeMixin) {
         }
 
         beforeDestroy() {
+            // 销毁组件时释放 ECharts 实例，避免内存泄漏。
             if (!this.chart) {
                 return;
             }
@@ -48,6 +52,7 @@ export default class extends mixins(ResizeMixin) {
             this.chart = null;
         }
         private initChart() {
+            // ECharts 必须绑定一个真实 DOM 节点，所以这里通过 id 找到 template 中的 div。
             this.chart = echarts.init(document.getElementById(this.id) as HTMLDivElement);
             this.chart.setOption({
                 'backgroundColor': '#fff',

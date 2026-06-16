@@ -1,8 +1,10 @@
 <template>
   <div class="container top10">
-    <h2 class="homeTitle">销量排名TOP10</h2>
+    <h2 class="homeTitle">
+      销量排名TOP10
+    </h2>
     <div class="charBox">
-      <div id="top" style="width: 100%; height: 380px"></div>
+      <div id="top" style="width: 100%; height: 380px" />
     </div>
   </div>
 </template>
@@ -14,14 +16,17 @@ import * as echarts from 'echarts'
   name: 'Top',
 })
 export default class extends Vue {
+  // 父组件传入的销量 TOP10 数据。
   @Prop() private top10data!: any
   @Watch('top10data')
+  // 数据变化时重新渲染排行图。
   getData() {
     this.$nextTick(() => {
       this.initChart()
     })
   }
   initChart() {
+    // 初始化销量排行横向柱状图。
     type EChartsOption = echarts.EChartsOption
     const chartDom = document.getElementById('top') as any
     const myChart = echarts.init(chartDom)

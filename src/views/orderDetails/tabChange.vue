@@ -1,15 +1,16 @@
-<!--  -->
 <template>
   <div class="tab-change">
     <div v-for="item in changedOrderList"
          :key="item.value"
          class="tab-item"
          :class="{ active: item.value === activeIndex }"
-         @click="tabChange(item.value)">
+         @click="tabChange(item.value)"
+    >
       <el-badge :class="{'special-item':item.num<10}"
                 class="item"
                 :value="item.num > 99 ? '99+' : item.num"
-                :hidden="!([2, 3, 4].includes(item.value) && item.num)">
+                :hidden="!([2, 3, 4].includes(item.value) && item.num)"
+      >
         {{ item.label }}
       </el-badge>
     </div>
@@ -24,16 +25,20 @@ import { getOrderDetailPage } from '@/api/order'
   name: 'TabChange'
 })
 export default class extends Vue {
+  // 父组件传入的各状态订单数量。
   @Prop({ default: '' }) orderStatics: any
+  // 父组件传入的默认激活 tab。
   @Prop({ default: '' }) defaultActivity: any
   private activeIndex: number = this.defaultActivity || 0
 
   @Watch('defaultActivity')
+  // 路由或父组件状态变化时，同步当前激活 tab。
   private onChange(val) {
     this.activeIndex = Number(val)
   }
 
   get changedOrderList() {
+    // 把订单状态和数量合并成 tab 展示数据。
     return [
       {
         label: '全部订单',
@@ -66,6 +71,7 @@ export default class extends Vue {
   }
 
   private tabChange(activeIndex) {
+    // 点击 tab 后通知父组件重新查询对应状态的订单。
     this.activeIndex = activeIndex
     this.$emit('tabChange', activeIndex)
   }

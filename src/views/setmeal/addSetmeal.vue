@@ -6,84 +6,103 @@
                :rules="rules"
                :inline="true"
                label-width="180px"
-               class="demo-ruleForm">
+               class="demo-ruleForm"
+      >
         <div>
           <el-form-item label="套餐名称:"
-                        prop="name">
+                        prop="name"
+          >
             <el-input v-model="ruleForm.name"
                       placeholder="请填写套餐名称"
-                      maxlength="14" />
+                      maxlength="14"
+            />
           </el-form-item>
           <el-form-item label="套餐分类:"
-                        prop="idType">
+                        prop="idType"
+          >
             <el-select v-model="ruleForm.idType"
                        placeholder="请选择套餐分类"
-                       @change="$forceUpdate()">
+                       @change="$forceUpdate()"
+            >
               <el-option v-for="(item, index) in setMealList"
                          :key="index"
                          :label="item.name"
-                         :value="item.id" />
+                         :value="item.id"
+              />
             </el-select>
           </el-form-item>
         </div>
         <div>
           <el-form-item label="套餐价格:"
-                        prop="price">
+                        prop="price"
+          >
             <el-input v-model="ruleForm.price"
-                      placeholder="请设置套餐价格" />
+                      placeholder="请设置套餐价格"
+            />
           </el-form-item>
         </div>
         <div>
           <el-form-item label="套餐菜品:"
-                        required>
+                        required
+          >
             <el-form-item>
               <div class="addDish">
                 <span v-if="dishTable.length == 0"
                       class="addBut"
-                      @click="openAddDish('new')">
+                      @click="openAddDish('new')"
+                >
                   + 添加菜品</span>
                 <div v-if="dishTable.length != 0"
-                     class="content">
+                     class="content"
+                >
                   <div class="addBut"
                        style="margin-bottom: 20px"
-                       @click="openAddDish('change')">
+                       @click="openAddDish('change')"
+                  >
                     + 添加菜品
                   </div>
                   <div class="table">
                     <el-table :data="dishTable"
-                              style="width: 100%">
+                              style="width: 100%"
+                    >
                       <el-table-column prop="name"
                                        label="名称"
                                        width="180"
-                                       align="center" />
+                                       align="center"
+                      />
                       <el-table-column prop="price"
                                        label="原价"
                                        width="180"
-                                       align="center">
+                                       align="center"
+                      >
                         <template slot-scope="scope">
                           {{ (Number(scope.row.price).toFixed(2) * 100) / 100 }}
                         </template>
                       </el-table-column>
                       <el-table-column prop="address"
                                        label="份数"
-                                       align="center">
+                                       align="center"
+                      >
                         <template slot-scope="scope">
                           <el-input-number v-model="scope.row.copies"
                                            size="small"
                                            :min="1"
                                            :max="99"
-                                           label="描述文字" />
+                                           label="描述文字"
+                          />
                         </template>
                       </el-table-column>
                       <el-table-column prop="address"
                                        label="操作"
                                        width="180px;"
-                                       align="center">
+                                       align="center"
+                      >
                         <template slot-scope="scope">
                           <el-button type="text"
                                      size="small"
                                      class="delBut non"
-                                     @click="delDishHandle(scope.$index)">
+                                     @click="delDishHandle(scope.$index)"
+                          >
                             删除
                           </el-button>
                         </template>
@@ -98,9 +117,11 @@
         <div>
           <el-form-item label="套餐图片:"
                         required
-                        prop="image">
+                        prop="image"
+          >
             <image-upload :prop-image-url="imageUrl"
-                          @imageChange="imageChange">
+                          @imageChange="imageChange"
+            >
               图片大小不超过2M<br>仅能上传 PNG JPEG JPG类型图片<br>建议上传200*200或300*300尺寸的图片
             </image-upload>
           </el-form-item>
@@ -120,7 +141,8 @@
                       type="textarea"
                       :rows="3"
                       maxlength="200"
-                      placeholder="套餐描述，最长200字" />
+                      placeholder="套餐描述，最长200字"
+            />
           </el-form-item>
         </div>
         <div class="subBox address">
@@ -130,12 +152,14 @@
             </el-button>
             <el-button type="primary"
                        :class="{ continue: actionType === 'add' }"
-                       @click="submitForm('ruleForm', false)">
+                       @click="submitForm('ruleForm', false)"
+            >
               保存
             </el-button>
             <el-button v-if="actionType == 'add'"
                        type="primary"
-                       @click="submitForm('ruleForm', true)">
+                       @click="submitForm('ruleForm', true)"
+            >
               保存并继续添加
             </el-button>
           </el-form-item>
@@ -147,29 +171,35 @@
                class="addDishList"
                :visible.sync="dialogVisible"
                width="60%"
-               :before-close="handleClose">
+               :before-close="handleClose"
+    >
       <el-input v-model="value"
                 class="seachDish"
                 placeholder="请输入菜品名称进行搜索"
                 style="width: 293px; height: 40px"
                 size="small"
-                clearable>
+                clearable
+      >
         <i slot="prefix"
            class="el-input__icon el-icon-search"
            style="cursor: pointer"
-           @click="seachHandle" />
+           @click="seachHandle"
+        />
       </el-input>
       <AddDish v-if="dialogVisible"
                ref="adddish"
                :check-list="checkList"
                :seach-key="seachKey"
                :dish-list="dishList"
-               @checkList="getCheckList" />
+               @checkList="getCheckList"
+      />
       <span slot="footer"
-            class="dialog-footer">
+            class="dialog-footer"
+      >
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary"
-                   @click="addTableList">添 加</el-button>
+                   @click="addTableList"
+        >添 加</el-button>
       </span>
     </el-dialog>
   </div>
@@ -193,15 +223,21 @@ import { baseUrl } from '@/config.json'
   }
 })
 export default class extends Vue {
+  // value/seachKey 用于添加菜品弹窗里的搜索。
   private value: string = ''
+  // 套餐分类下拉数据。
   private setMealList: [] = []
   private seachKey: string = ''
   private dishList: [] = []
   private imageUrl: string = ''
+  // actionType 决定当前页面是新增套餐还是编辑套餐。
   private actionType: string = ''
+  // dishTable 是套餐里已选择的菜品列表。
   private dishTable: [] = []
   private dialogVisible: boolean = false
+  // checkList 是弹窗里临时勾选的菜品，确认后才同步到 dishTable。
   private checkList: any[] = []
+  // ruleForm 是 Element UI 表单绑定的数据对象。
   private ruleForm = {
     name: '',
     categoryId: '',
@@ -215,6 +251,7 @@ export default class extends Vue {
   }
 
   get rules() {
+    // 表单校验规则，和 template 里 el-form-item 的 prop 一一对应。
     return {
       name: {
         required: true,
@@ -263,7 +300,9 @@ export default class extends Vue {
   }
 
   created() {
+    // 新增/编辑都需要先加载套餐分类。
     this.getDishTypeList()
+    // URL 上有 id 表示编辑套餐；没有 id 表示新增套餐。
     this.actionType = this.$route.query.id ? 'edit' : 'add'
     if (this.actionType == 'edit') {
       this.init()
@@ -271,6 +310,7 @@ export default class extends Vue {
   }
 
   private async init() {
+    // 编辑模式下先根据 id 查询套餐详情，再回填表单和已选菜品列表。
     querySetmealById(this.$route.query.id).then(res => {
       if (res && res.data && res.data.code === 1) {
         this.ruleForm = res.data.data
@@ -287,8 +327,10 @@ export default class extends Vue {
     })
   }
   private seachHandle() {
+    // 把输入框内容同步给添加菜品弹窗，用作筛选关键字。
     this.seachKey = this.value
   }
+
   // 获取套餐分类
   private getDishTypeList() {
     getCategoryList({ type: 2, page: 1, pageSize: 1000 }).then(res => {
@@ -317,6 +359,7 @@ export default class extends Vue {
 
   // 删除套餐菜品
   delDishHandle(index: any) {
+    // 从已选菜品表格里移除一行。
     this.dishTable.splice(index, 1)
     this.checkList = this.dishTable
     // this.checkList.splice(index, 1)
@@ -324,16 +367,20 @@ export default class extends Vue {
 
   // 获取添加菜品数据 - 确定加菜倒序展示
   private getCheckList(value: any) {
+    // 子组件 AddDish 把选中的菜品传回来，这里先暂存在 checkList。
     this.checkList = [...value].reverse()
   }
 
   // 添加菜品
   openAddDish(st: string) {
+    // 打开添加菜品弹窗。
     this.seachKey = ''
     this.dialogVisible = true
   }
+
   // 取消添加菜品
   handleClose(done: any) {
+    // 取消时恢复到打开弹窗前的已选菜品状态。
     // this.$refs.adddish.close()
     this.dialogVisible = false
     this.checkList = JSON.parse(JSON.stringify(this.dishTable))
@@ -342,6 +389,7 @@ export default class extends Vue {
 
   // 保存添加菜品列表
   public addTableList() {
+    // 点击确定后，才把弹窗里的临时选择同步成套餐菜品列表。
     this.dishTable = JSON.parse(JSON.stringify(this.checkList))
     this.dishTable.forEach((n: any) => {
       n.copies = 1
@@ -350,7 +398,8 @@ export default class extends Vue {
   }
 
   public submitForm(formName: any, st: any) {
-    ;(this.$refs[formName] as any).validate((valid: any) => {
+    // 提交前先做表单校验，并把套餐菜品整理成后端接口需要的 setmealDishes。
+    (this.$refs[formName] as any).validate((valid: any) => {
       if (valid) {
         if (this.dishTable.length === 0) {
           return this.$message.error('套餐下菜品不能为空')
@@ -376,7 +425,7 @@ export default class extends Vue {
                 if (!st) {
                   this.$router.push({ path: '/setmeal' })
                 } else {
-                  ;(this as any).$refs.ruleForm.resetFields()
+                  (this as any).$refs.ruleForm.resetFields()
                   this.dishList = []
                   this.dishTable = []
                   this.ruleForm = {
@@ -423,6 +472,7 @@ export default class extends Vue {
   }
 
   imageChange(value: any) {
+    // 图片上传组件通过 imageChange 事件把图片地址传回来。
     this.ruleForm.image = value
   }
 }

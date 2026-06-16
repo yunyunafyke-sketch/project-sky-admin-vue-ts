@@ -1,6 +1,6 @@
-<!--  -->
 <template>
   <div class="upload-item">
+    <!-- Element UI 上传组件。上传成功后通过 imageChange 事件把图片地址传给父组件。 -->
     <el-upload ref="uploadfiles"
                :accept="type"
                :class="{ borderNone: imageUrl }"
@@ -11,17 +11,22 @@
                :on-remove="handleRemove"
                :on-error="handleError"
                :before-upload="beforeAvatarUpload"
-               :headers="headers">
+               :headers="headers"
+    >
       <img v-if="imageUrl"
            :src="imageUrl"
-           class="avatar">
+           class="avatar"
+      >
 
       <i v-else
-         class="el-icon-plus avatar-uploader-icon" />
+         class="el-icon-plus avatar-uploader-icon"
+      />
       <span v-if="imageUrl"
-            class="el-upload-list__item-actions">
+            class="el-upload-list__item-actions"
+      >
         <span class="el-upload-span"
-              @click.stop="oploadImgDel">
+              @click.stop="oploadImgDel"
+        >
           删除图片
         </span>
         <span class="el-upload-span"> 重新上传 </span>
@@ -41,10 +46,14 @@ import { getToken } from '@/utils/cookies'
   name: 'UploadImage'
 })
 export default class extends Vue {
+  // 允许上传的文件类型。
   @Prop({ default: '.jpg,.jpeg,.png' }) type: string
+  // 文件大小限制，单位 MB。
   @Prop({ default: 2 }) size: number
+  // 父组件传入的已有图片地址，常用于编辑页回显。
   @Prop({ default: '' }) propImageUrl: string
 
+  // 上传接口需要 token，后端用它校验当前用户是否有上传权限。
   private headers = {
     token: getToken()
   }
@@ -52,6 +61,7 @@ export default class extends Vue {
   handleRemove() {}
 
   @Watch('propImageUrl')
+  // 父组件图片地址变化时，同步更新组件内部预览图。
   private onChange(val) {
     this.imageUrl = val
   }
@@ -65,6 +75,7 @@ export default class extends Vue {
   }
 
   handleAvatarSuccess(response: any, file: any, fileList: any) {
+    // 后端返回图片访问地址后，先本地预览，再通知父组件保存这个地址。
     // this.imageUrl = response.data
     // this.imageUrl = `http://172.17.2.120:8080/common/download?name=${response.data}`
     this.imageUrl = `${response.data}`
@@ -74,10 +85,12 @@ export default class extends Vue {
   }
 
   oploadImgDel() {
+    // 删除图片时同时清空父组件里的图片字段。
     this.imageUrl = ''
     this.$emit('imageChange', this.imageUrl)
   }
   beforeAvatarUpload(file) {
+    // 上传前校验文件大小；返回 false 会阻止上传。
     const isLt2M = file.size / 1024 / 1024 < this.size
     if (!isLt2M) {
       this.$message({

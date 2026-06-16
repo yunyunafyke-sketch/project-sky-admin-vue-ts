@@ -2,27 +2,34 @@
   <div class="addDish">
     <div class="leftCont">
       <div v-show="seachKey.trim() == ''"
-           class="tabBut">
+           class="tabBut"
+      >
         <span v-for="(item, index) in dishType"
               :key="index"
               :class="{ act: index == keyInd }"
-              @click="checkTypeHandle(index, item.id)">{{ item.name }}</span>
+              @click="checkTypeHandle(index, item.id)"
+        >{{ item.name }}</span>
       </div>
       <div class="tabList">
         <div class="table"
-             :class="{ borderNone: !dishList.length }">
+             :class="{ borderNone: !dishList.length }"
+        >
           <div v-if="dishList.length == 0"
-               style="padding-left: 10px">
+               style="padding-left: 10px"
+          >
             <Empty />
           </div>
           <el-checkbox-group v-if="dishList.length > 0"
                              v-model="checkedList"
-                             @change="checkedListHandle">
+                             @change="checkedListHandle"
+          >
             <div v-for="(item, index) in dishList"
                  :key="item.name + item.id"
-                 class="items">
+                 class="items"
+            >
               <el-checkbox :key="index"
-                           :label="item.name">
+                           :label="item.name"
+              >
                 <div class="item">
                   <span style="flex: 3; text-align: left">{{
                     item.dishName
@@ -43,13 +50,16 @@
       <div class="items">
         <div v-for="(item, ind) in checkedListAll"
              :key="ind"
-             class="item">
+             class="item"
+        >
           <span>{{ item.dishName || item.name }}</span>
           <span class="price">￥ {{ (Number(item.price) ).toFixed(2)*100/100 }} </span>
           <span class="del"
-                @click="delCheck(item.name)">
+                @click="delCheck(item.name)"
+          >
             <img src="./../../../assets/icons/btn_clean@2x.png"
-                 alt="">
+                 alt=""
+            >
           </span>
         </div>
       </div>
@@ -70,11 +80,17 @@ import Empty from '@/components/Empty/index.vue'
   }
 })
 export default class extends Vue {
+  // 父组件传入的值，当前组件保留该 prop 以便扩展。
   @Prop({ default: '' }) private value!: number
+  // 父组件传入的已选菜品列表。
   @Prop({ default: [] }) private checkList!: any[]
+  // 父组件传入的搜索关键字。
   @Prop({ default: '' }) private seachKey!: string
+  // 菜品分类列表。
   private dishType: [] = []
+  // 当前分类下展示的菜品列表。
   private dishList: [] = []
+  // 已经请求过的所有菜品缓存，用于从名称反查完整菜品对象。
   private allDishList: any[] = []
   private dishListCache: any[] = []
   private keyInd = 0
@@ -87,6 +103,7 @@ export default class extends Vue {
   }
 
   @Watch('seachKey')
+  // 父组件搜索关键字变化时，重新按名称查询菜品。
   private seachKeyChange(value: any) {
     if (value.trim()) {
       this.getDishForName(this.seachKey)
@@ -94,14 +111,15 @@ export default class extends Vue {
   }
 
   public init() {
-    // 菜单列表数据获取
+    // 菜单列表数据获取。
     this.getDishType()
-    // 初始化选项
+    // 初始化已选项。
     this.checkedList = this.checkList.map((it: any) => it.name)
-    // 已选项的菜品-详细信息
+    // 已选项的菜品详细信息。
     this.checkedListAll = this.checkList.reverse()
   }
-  // 获取套餐分类
+
+  // 获取菜品分类。
   public getDishType() {
     getCategoryList({ type: 1 }).then(res => {
       if (res && res.data && res.data.code === 1) {
@@ -120,7 +138,7 @@ export default class extends Vue {
     })
   }
 
-  // 通过套餐ID获取菜品列表分类
+  // 通过分类 id 获取菜品列表。
   private getDishList(id: number) {
     queryDishList({ categoryId: id }).then(res => {
       if (res && res.data && res.data.code === 1) {
@@ -146,7 +164,7 @@ export default class extends Vue {
     })
   }
 
-  // 关键词收搜菜品列表分类
+  // 按关键词搜索菜品。
   private getDishForName(name: any) {
     queryDishList({ name }).then(res => {
       if (res && res.data && res.data.code === 1) {
@@ -163,11 +181,13 @@ export default class extends Vue {
   }
   // 点击分类
   private checkTypeHandle(ind: number, id: any) {
+    // 切换左侧分类，并加载该分类菜品。
     this.keyInd = ind
     this.getDishList(id)
   }
   // 添加菜品
   private checkedListHandle(value: [string]) {
+    // value 是 el-checkbox-group 返回的菜品名称数组，需要转换成完整菜品对象列表。
     // TODO 实现倒序 由于value是组件内封装无法从前面添加 所有取巧处理倒序添加
     // 倒序展示 - 数据处理前反正 为正序
     this.checkedListAll.reverse()
@@ -214,15 +234,18 @@ export default class extends Vue {
   }
 
   open(done: any) {
+    // 打开弹窗时缓存当前已选菜品，取消时可以恢复。
     this.dishListCache = JSON.parse(JSON.stringify(this.checkList))
   }
 
   close(done: any) {
+    // 关闭弹窗时恢复缓存。
     this.checkList = this.dishListCache
   }
 
   // 删除
   private delCheck(name: any) {
+    // 从已选菜品中移除指定菜品，并通知父组件同步。
     const index = this.checkedList.findIndex(it => it === name)
     const indexAll = this.checkedListAll.findIndex(
       (it: any) => it.name === name

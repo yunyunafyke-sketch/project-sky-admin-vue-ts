@@ -12,16 +12,20 @@
         style="width: 120px; height: 31px"
       /> -->
       <div v-if="!isCollapse"
-           class="sidebar-logo">
+           class="sidebar-logo"
+      >
         <img src="@/assets/login/logo.png"
-             style="width: 120px; height: 31px">
+             style="width: 120px; height: 31px"
+        >
       </div>
       <div v-else
-           class="sidebar-logo-mini">
+           class="sidebar-logo-mini"
+      >
         <img src="@/assets/login/mini-logo.png">
       </div>
     </div>
     <el-scrollbar wrap-class="scrollbar-wrapper">
+      <!-- el-menu 是 Element UI 的菜单组件，routes 会被递归渲染成左侧菜单。 -->
       <el-menu :default-openeds="defOpen"
                :default-active="defAct"
                :collapse="isCollapse"
@@ -30,12 +34,14 @@
                :active-text-color="variables.menuActiveText"
                :unique-opened="false"
                :collapse-transition="false"
-               mode="vertical">
+               mode="vertical"
+      >
         <sidebar-item v-for="route in routes"
                       :key="route.path"
                       :item="route"
                       :base-path="route.path"
-                      :is-collapse="isCollapse" />
+                      :is-collapse="isCollapse"
+        />
         <!-- <div class="sub-menu">
           <div class="avatarName">
             {{ name }}
@@ -70,11 +76,15 @@ import Cookies from 'js-cookie'
 })
 export default class extends Vue {
   private restKey: number = 0
+
+  // 顶部用户信息优先读 Vuex；刷新页面 Vuex 为空时再从 Cookie 兜底。
   get name() {
     return (UserModule.userInfo as any).name
       ? (UserModule.userInfo as any).name
       : JSON.parse(Cookies.get('user_info') as any).name
   }
+
+  // 默认展开哪个菜单分组。
   get defOpen() {
     // const urlArr = this.$route.path.split('/')
     // const openStr = urlArr.length > 2 ? `/${urlArr[1]}` : '/'
@@ -87,6 +97,7 @@ export default class extends Vue {
     return path
   }
 
+  // 当前激活菜单项，和当前路由地址保持一致。
   get defAct() {
     let path = this.$route.path
     return path
@@ -100,6 +111,7 @@ export default class extends Vue {
     return UserModule.roles
   }
 
+  // 从 router.ts 的路由配置里取出 Layout 子路由，作为左侧菜单数据来源。
   get routes() {
     let routes = JSON.parse(
       JSON.stringify([...(this.$router as any).options.routes])
@@ -119,9 +131,12 @@ export default class extends Vue {
     return variables
   }
 
+  // Element UI 菜单的 collapse 控制收起/展开。
   get isCollapse() {
     return !this.sidebar.opened
   }
+
+  // 侧边栏里的退出入口，逻辑和顶部栏退出一致。
   private async logout() {
     this.$store.dispatch('LogOut').then(() => {
       // location.href = '/'

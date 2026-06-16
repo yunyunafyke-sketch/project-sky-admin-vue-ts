@@ -1,17 +1,17 @@
 <template>
   <div class="dashboard-container home">
     <!-- 营业数据 -->
-    <Overview :overviewData="overviewData" />
+    <Overview :overview-data="overviewData" />
     <!-- end -->
     <!-- 订单管理 -->
-    <Orderview :orderviewData="orderviewData" />
+    <Orderview :orderview-data="orderviewData" />
     <!-- end -->
     <div class="homeMain">
       <!-- 菜品总览 -->
-      <CuisineStatistics :dishesData="dishesData" />
+      <CuisineStatistics :dishes-data="dishesData" />
       <!-- end -->
       <!-- 套餐总览 -->
-      <SetMealStatistics :setMealData="setMealData" />
+      <SetMealStatistics :set-meal-data="setMealData" />
       <!-- end -->
     </div>
     <!-- 订单信息 -->
@@ -55,6 +55,7 @@ import OrderList from './components/orderList.vue'
   },
 })
 export default class extends Vue {
+  // 工作台由多块卡片组成，每块卡片的数据分别存在下面这些字段里。
   private todayData = {} as any
   private overviewData = {}
   private orderviewData = {} as any
@@ -71,7 +72,9 @@ export default class extends Vue {
   created() {
     this.init()
   }
+
   init() {
+    // 等页面 DOM 更新后再并行触发各块数据请求。
     this.$nextTick(() => {
       this.getBusinessData()
       this.getOrderStatisticsData()
@@ -79,6 +82,7 @@ export default class extends Vue {
       this.getSetMealStatisticsData()
     })
   }
+
   // 获取营业数据
   async getBusinessData() {
     const data = await getBusinessData()
@@ -99,6 +103,7 @@ export default class extends Vue {
     const data = await getSetMealStatistics()
     this.setMealData = data.data.data
   }
+
   //获取待处理，待派送，派送中数量
   getOrderListBy3Status() {
     getOrderListBy({})

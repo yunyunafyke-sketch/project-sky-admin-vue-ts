@@ -6,32 +6,36 @@
     class="pwdCon"
     @close="handlePwdClose()"
   >
-    <el-form :model="form" label-width="85px" :rules="rules" ref="form">
+    <el-form ref="form" :model="form" label-width="85px" :rules="rules">
       <el-form-item label="原始密码：" prop="oldPassword">
         <el-input
           v-model="form.oldPassword"
           type="password"
           placeholder="请输入"
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item label="新密码：" prop="newPassword">
         <el-input
           v-model="form.newPassword"
           type="password"
           placeholder="6 - 20位密码，数字或字母，区分大小写"
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item label="确认密码：" prop="affirmPassword">
         <el-input
           v-model="form.affirmPassword"
           type="password"
           placeholder="请输入"
-        ></el-input>
+        />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="handlePwdClose()">取 消</el-button>
-      <el-button type="primary" @click="handleSave()">保 存</el-button>
+      <el-button @click="handlePwdClose()">
+        取 消
+      </el-button>
+      <el-button type="primary" @click="handleSave()">
+        保 存
+      </el-button>
     </div>
   </el-dialog>
 </template>
@@ -44,7 +48,10 @@ import { editPassword } from '@/api/users'
   name: 'Password',
 })
 export default class extends Vue {
+  // 父组件 Navbar 控制弹窗显隐，这里通过 prop 接收。
   @Prop() private dialogFormVisible!: any
+
+  // 密码校验：6-20 位，只允许数字或英文字母。
   private validatePwd = (rule: any, value: any, callback: Function) => {
     const reg = /^[0-9A-Za-z]{6,20}$/
     if (!value) {
@@ -55,6 +62,8 @@ export default class extends Vue {
       callback()
     }
   }
+
+  // 确认密码必须和新密码一致。
   private validatePass2 = (rule, value, callback) => {
     if (!value) {
       callback(new Error('请再次输入密码'))
@@ -64,6 +73,8 @@ export default class extends Vue {
       callback()
     }
   }
+
+  // Element UI 表单校验规则。
   rules = {
     oldPassword: [{ validator: this.validatePwd, trigger: 'blur' }],
     newPassword: [{ validator: this.validatePwd, trigger: 'blur' }],
@@ -71,8 +82,10 @@ export default class extends Vue {
   }
   private form = {} as any
   private affirmPassword = ''
+
   handleSave() {
-    ;(this.$refs.form as ElForm).validate(async (valid: boolean) => {
+    // 校验通过后调用修改密码接口，成功后通知父组件关闭弹窗。
+    (this.$refs.form as ElForm).validate(async (valid: boolean) => {
       if (valid) {
         const parnt = {
           oldPassword: this.form.oldPassword,
@@ -86,8 +99,10 @@ export default class extends Vue {
       }
     })
   }
+
   handlePwdClose() {
-    ;(this.$refs.form as ElForm).resetFields()
+    // 关闭时重置表单，避免下次打开还保留旧输入和校验状态。
+    (this.$refs.form as ElForm).resetFields()
     this.$emit('handleclose')
   }
 }

@@ -11,9 +11,9 @@
           @clear="init"
           @keyup.enter.native="initFun"
         />
-        <el-button class="normal-btn continue" @click="init(true)"
-          >查询</el-button
-        >
+        <el-button class="normal-btn continue" @click="init(true)">
+          查询
+        </el-button>
         <el-button
           type="primary"
           style="float: right"
@@ -23,9 +23,9 @@
         </el-button>
       </div>
       <el-table
+        v-if="tableData.length"
         :data="tableData"
         stripe
-        v-if="tableData.length"
         class="tableBox"
       >
         <el-table-column prop="name" label="员工姓名" />
@@ -62,7 +62,7 @@
               :class="{
                 'disabled-text': scope.row.username === 'admin',
                 blueBug: scope.row.status == '0',
-                delBut: scope.row.status != '0',
+                delBut: scope.row.status != '0'
               }"
               @click="statusHandle(scope.row)"
             >
@@ -102,7 +102,9 @@ import Empty from '@/components/Empty/index.vue'
   },
 })
 export default class extends Vue {
+  // 搜索框输入的员工姓名。
   private input: any = ''
+  // counts/page/pageSize 是分页组件需要的三个核心字段。
   private counts: number = 0
   private page: number = 1
   private pageSize: number = 10
@@ -116,11 +118,13 @@ export default class extends Vue {
   }
 
   initProp(val) {
+    // 子组件搜索输入变化后，同步到本页并重新查询。
     this.input = val
     this.initFun()
   }
 
   initFun() {
+    // 新搜索从第一页开始查。
     this.page = 1
     this.init()
   }
@@ -130,6 +134,7 @@ export default class extends Vue {
   }
 
   private async init(isSearch?: boolean) {
+    // 查询员工列表。name 为 undefined 时，后端按“无姓名筛选”处理。
     this.isSearch = isSearch
     const params = {
       page: this.page,
@@ -153,6 +158,7 @@ export default class extends Vue {
 
   // 添加
   private addEmployeeHandle(st: string, username: string) {
+    // st === 'add' 表示新增；否则 st 是员工 id，进入同一个页面做编辑。
     if (st === 'add') {
       this.$router.push({ path: '/employee/add' })
     } else {
@@ -165,6 +171,7 @@ export default class extends Vue {
 
   //状态修改
   private statusHandle(row: any) {
+    // admin 是系统内置账号，不允许禁用或编辑。
     if (row.username === 'admin') {
       return
     }
@@ -189,11 +196,13 @@ export default class extends Vue {
   }
 
   private handleSizeChange(val: any) {
+    // 切换每页条数后重新请求列表。
     this.pageSize = val
     this.init()
   }
 
   private handleCurrentChange(val: any) {
+    // 切换页码后重新请求列表。
     this.page = val
     this.init()
   }

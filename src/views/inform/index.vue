@@ -15,70 +15,68 @@
               ountUnread === 0 ? null : ountUnread > 99 ? '99+' : ountUnread
             "
             :hidden="!([1].includes(item.value) && ountUnread)"
-            >{{ item.label }}</el-badge
           >
+            {{ item.label }}
+          </el-badge>
         </li>
       </ul>
 
       <el-button
+        v-if="status === 1 && baseData.length > 0"
         icon="iconfont icon-clear"
         class="right-el-button"
-        v-if="status === 1 && baseData.length > 0"
         @click="handleBatch"
-        >全部已读</el-button
       >
+        全部已读
+      </el-button>
       <el-button
+        v-else
         icon="iconfont icon-clear"
         class="right-el-button onbutton"
         disabled
-        v-else
-        >全部已读</el-button
       >
+        全部已读
+      </el-button>
     </div>
     <div class="container newBox" :class="{ hContainer: baseData.length }">
-      <div class="informList" v-if="baseData.length > 0">
+      <div v-if="baseData.length > 0" class="informList">
         <div v-for="(item, index) in baseData" :key="index">
           <!-- 待接单 -->
-          <div class="item" v-if="item.type === 1">
+          <div v-if="item.type === 1" class="item">
             <div class="tit">
               <span>【待接单】</span>{{ item.arrNew[0]
               }}<span class="fontOrderTip" @click="handleSetStatus(item.id)">
                 <router-link :to="'/order?status=' + 2">{{
                   item.arrNew[1]
-                }}</router-link></span
-              >{{ item.arrNew[2]
+                }}</router-link></span>{{ item.arrNew[2]
               }}<span class="time">{{ item.createTime }}</span>
             </div>
           </div>
-          <div class="item" v-if="item.type === 2">
+          <div v-if="item.type === 2" class="item">
             <div class="tit">
               <i>急</i><span>【待接单】</span>{{ item.arrNew[0]
-              }}<span class="fontOrderTip" @click="handleSetStatus(item.id)"
-                ><router-link :to="'/order?status=' + 2">{{
-                  item.arrNew[1]
-                }}</router-link></span
-              >{{ item.arrNew[2]
+              }}<span class="fontOrderTip" @click="handleSetStatus(item.id)"><router-link :to="'/order?status=' + 2">{{
+                item.arrNew[1]
+              }}</router-link></span>{{ item.arrNew[2]
               }}<span class="time">{{ item.createTime }}</span>
             </div>
           </div>
           <!-- end -->
           <!-- 待派送 -->
-          <div class="item" v-if="item.type === 3">
+          <div v-if="item.type === 3" class="item">
             <div class="tit">
               <span>【待派送】</span>{{ item.arrNew[0]
-              }}<span class="fontOrderTip" @click="handleSetStatus(item.id)"
-                ><router-link :to="'/order?status=' + 2">{{
-                  item.arrNew[1]
-                }}</router-link></span
-              >{{ item.arrNew[2]
+              }}<span class="fontOrderTip" @click="handleSetStatus(item.id)"><router-link :to="'/order?status=' + 2">{{
+                item.arrNew[1]
+              }}</router-link></span>{{ item.arrNew[2]
               }}<span class="time">{{ item.createTime }}</span>
             </div>
           </div>
           <!-- end -->
           <!-- 催单 -->
           <div
-            class="item"
             v-if="item.type === 4"
+            class="item"
             @mouseenter="toggleShow(item.id, index)"
             @mouseleave="mouseLeaves(index)"
           >
@@ -93,12 +91,7 @@
               </div>
               <div v-if="shopShow && showIndex === index" class="orderInfo">
                 <p>
-                  <span
-                    ><label>下单时间：</label>{{ item.details.orderTime }}</span
-                  ><span
-                    ><label>预计送达时间：</label
-                    >{{ item.details.estimatedDeliveryTime }}</span
-                  >
+                  <span><label>下单时间：</label>{{ item.details.orderTime }}</span><span><label>预计送达时间：</label>{{ item.details.estimatedDeliveryTime }}</span>
                 </p>
                 <p>
                   {{ item.details.consignee }}，{{ item.details.phone }}，{{
@@ -106,9 +99,7 @@
                   }}
                 </p>
                 <p>
-                  <span
-                    ><label>菜品：</label>{{ item.details.orderDishes }}</span
-                  >
+                  <span><label>菜品：</label>{{ item.details.orderDishes }}</span>
                 </p>
               </div>
             </div>
@@ -134,8 +125,8 @@
             </div>
           </div> -->
           <div
-            class="item"
             v-if="item.type === 5"
+            class="item"
             @mouseenter="toggleShow(item.id, index)"
             @mouseleave="mouseLeaves(index)"
           >
@@ -143,37 +134,20 @@
               <div class="tit">
                 <span>【今日数据】</span>认真工作的同时也要好好生活。<span
                   class="time"
-                  >{{ item.createTime }}</span
-                >
+                >{{ item.createTime }}</span>
               </div>
               <div v-if="shopShow && showIndex === index" class="orderInfo">
                 <p>
-                  <span
-                    ><label>营业额：</label>{{ item.details.turnover }}</span
-                  >
-                  <span
-                    ><label>有效订单：</label
-                    >{{ item.details.validOrderCount }}笔</span
-                  >
-                  <span
-                    ><label>订单完成率：</label
-                    >{{ item.details.orderCompletionRate }}</span
-                  >
+                  <span><label>营业额：</label>{{ item.details.turnover }}</span>
+                  <span><label>有效订单：</label>{{ item.details.validOrderCount }}笔</span>
+                  <span><label>订单完成率：</label>{{ item.details.orderCompletionRate }}</span>
                 </p>
                 <p>
-                  <span
-                    ><label>今日新增用户：</label
-                    >{{ item.details.newUsers }}</span
-                  >
-                  <span
-                    ><label>今日取消：</label
-                    >{{ item.details.cancelledOrders }}笔</span
-                  >
-                  <span
-                    ><label>今日取消金额：</label>￥{{
-                      item.details.cancelledAmount
-                    }}</span
-                  >
+                  <span><label>今日新增用户：</label>{{ item.details.newUsers }}</span>
+                  <span><label>今日取消：</label>{{ item.details.cancelledOrders }}笔</span>
+                  <span><label>今日取消金额：</label>￥{{
+                    item.details.cancelledAmount
+                  }}</span>
                 </p>
               </div>
             </div>
@@ -216,6 +190,7 @@ import {
 })
 export default class extends Vue {
   // @Inject('reload') readonly reload!: Function
+  // activeIndex/status 控制当前查看未读还是已读消息。
   private activeIndex = 0
   private shopShow = false
   private counts: number = 0
@@ -229,6 +204,7 @@ export default class extends Vue {
   private isActive: boolean = false
 
   get tabList() {
+    // 消息中心上方两个 tab。
     return [
       {
         label: '未读',
@@ -243,6 +219,7 @@ export default class extends Vue {
     ]
   }
   get ountUnread() {
+    // 未读数量存在 Vuex app 模块里，顶部栏也会读取同一个值。
     return AppModule.statusNumber
   }
   created() {
@@ -250,6 +227,7 @@ export default class extends Vue {
   }
   // 获取列表数据
   async getData() {
+    // status=1 未读，status=2 已读。
     const parent = {
       pageNum: this.page,
       pageSize: this.pageSize,
@@ -262,7 +240,7 @@ export default class extends Vue {
       let objNew = {} as any
       let arrDetails = []
       this.baseData.forEach((val) => {
-        // 处理后端返回的状订单字符串转义
+        // 处理后端返回的订单字符串。
         const arrContent = val.content.split(' ')
         // 处理催单、闭店详情数据
         val.arrNew = arrContent
@@ -280,6 +258,7 @@ export default class extends Vue {
 
   // 全部已读
   async handleBatch() {
+    // 当前页所有消息 id 收集起来后，调用批量已读接口。
     const ids = []
     this.baseData.forEach((val) => {
       ids.push(val.id)
@@ -297,6 +276,7 @@ export default class extends Vue {
   }
   // 设置单个订单已读
   async handleSetStatus(id) {
+    // 标记单条消息为已读。
     const { data } = await setStatus(id)
     if (data.code === 1) {
       // this.status = 2
@@ -314,6 +294,7 @@ export default class extends Vue {
   }
   // 获取未读消息
   async getCountUnread() {
+    // 同步未读数量到 Vuex，顶部栏可立即刷新。
     const { data } = await getCountUnread()
     if (data.code === 1) {
       AppModule.StatusNumber(data.data)
@@ -324,6 +305,7 @@ export default class extends Vue {
   }
   // 触发已读未读按钮
   handleClass(index) {
+    // index=0 看未读，index=1 看已读。
     this.activeIndex = index
     if (index === 0) {
       this.status = 1
@@ -334,6 +316,7 @@ export default class extends Vue {
   }
   // 下拉菜单显示
   toggleShow(id, index) {
+    // 鼠标停留 3 秒后，把未读消息标记为已读。
     this.shopShow = true
     this.showIndex = index
     let t = 3
@@ -355,11 +338,13 @@ export default class extends Vue {
     this.showIndex = index
   }
   private handleSizeChange(val: any) {
+    // 切换每页条数后重新请求。
     this.pageSize = val
     this.getData()
   }
 
   private handleCurrentChange(val: any) {
+    // 切换页码后重新请求。
     this.page = val
     this.getData()
   }

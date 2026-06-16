@@ -1,3 +1,4 @@
+// 返回当前时间，格式为 HH:mm:ss。
 export const formatDate = () => {
   const now = new Date();
   let hour: string | number = now.getHours();
@@ -9,6 +10,8 @@ export const formatDate = () => {
   return `${hour}:${minute}:${second}`;
 };
 
+// 简单日期格式化工具。
+// fmt 里支持 YYYY、mm、dd，例如 dateFormat("YYYY-mm-dd", timestamp)。
 function dateFormat(fmt: any, time: any) {
   let date = new Date(time);
   let ret;
@@ -33,7 +36,7 @@ function dateFormat(fmt: any, time: any) {
   return fmt;
 }
 
-// js获取昨日的日期
+// 获取昨日的开始和结束日期，格式为 YYYY-mm-dd。
 export const get1stAndToday = () => {
   let toData = new Date(new Date().toLocaleDateString()).getTime();
   let yesterdayStart = toData - 3600 * 24 * 1000;
@@ -42,7 +45,8 @@ export const get1stAndToday = () => {
   let endDay1 = dateFormat("YYYY-mm-dd", yesterdayEnd);
   return [startDay1, endDay1];
 };
-// 获取昨日、今日日期
+
+// 获取昨日、今日日期，格式为 YYYY.mm.dd。
 export const getday = () => {
   let toData = new Date(new Date().toLocaleDateString()).getTime();
   let yesterdays= toData - 3600 * 24 * 1000;
@@ -51,7 +55,7 @@ export const getday = () => {
   return [yesterday,today];
 };
 
-// 获取近7日
+// 获取近 7 日日期范围。
 export const past7Day = () => {
   let toData = new Date(new Date().toLocaleDateString()).getTime();
   let past7daysStart = toData - 7 * 3600 * 24 * 1000;
@@ -61,7 +65,7 @@ export const past7Day = () => {
   return [days7Start, days7End];
 };
 
-// 获取近30日
+// 获取近 30 日日期范围。
 export const past30Day = () => {
   let toData = new Date(new Date().toLocaleDateString()).getTime();
   let past30daysStart = toData - 30 * 3600 * 24 * 1000;
@@ -70,7 +74,8 @@ export const past30Day = () => {
   let days30End = dateFormat("YYYY-mm-dd", past30daysEnd);
   return [days30Start, days30End];
 };
-// 获取本周
+
+// 获取本周日期范围。
 export const pastWeek = () => {
   let toData = new Date(new Date().toLocaleDateString()).getTime();
   var nowDayOfWeek = new Date().getDay();
@@ -80,7 +85,8 @@ export const pastWeek = () => {
   let weekEnd = dateFormat("YYYY-mm-dd", weekEndData);
   return [weekStart, weekEnd];
 };
-// 获取本月
+
+// 获取本月日期范围。
 export const pastMonth = () => {
   let year = new Date().getFullYear()
   let month =new Date().getMonth()

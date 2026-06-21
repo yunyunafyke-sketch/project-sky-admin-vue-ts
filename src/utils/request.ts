@@ -51,6 +51,8 @@ service.interceptors.request.use(
     // 知识点：这里手动把 params 拼到 url 上，是为了让后面的“重复请求 key”能稳定包含查询参数。[出处: Axios-取消请求]
     if (config.method === 'get' && config.params) {
       // 知识点：GET 请求一般长这样：/category/page?page=1&pageSize=10。[出处: Axios-实例]
+      // /employee/page?page=1&pageSize=10&filter%5Bstatus%5D=1&filter%5Bname%5D=%E5%BC%A0%E4%B8%89
+      // /employee/page?page=1&pageSize=10&filter[status]=1&filter[name]=张三
       let url = config.url + '?';
       // 知识点：Object.keys(obj) 可以拿到对象所有字段名，适合遍历查询参数。[出处: JS-对象]
       for (const propName of Object.keys(config.params)) {

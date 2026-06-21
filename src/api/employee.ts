@@ -26,7 +26,7 @@ export const getEmployeeList = (params: any) => {
   return request({
     url: '/employee/page',
     method: 'get',
-    params
+    params: params
   })
 }
 

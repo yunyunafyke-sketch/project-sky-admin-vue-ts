@@ -4,7 +4,7 @@
       <label style="margin-right:5px">员工姓名：</label>
       <el-input v-model="name" placeholder="请输入员工姓名" style="width:15%" />
       <el-button type="primary" style="margin-left: 20px" @click="pageQuery()">查询</el-button>
-      <el-button type="primary" style="float:right">+添加员工</el-button>
+      <el-button type="primary" style="float:right" @click="handleAddEmp">+添加员工</el-button>
     </div>
     <div>
       <el-table
@@ -128,7 +128,13 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    //跳转到新增员工页面（组件）
+    handleAddEmp(){
+      //路由跳转，跳转到新增员工组件
+      this.$router.push('/employee/add')
     }
+
   }
 }
 

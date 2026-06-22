@@ -40,12 +40,12 @@
 
 <script lang="ts">
 
-import { addEmployee } from '@/api/employee'
+import { addEmployee, editEmployee, queryEmployeeById } from '@/api/employee'
 
 export default {
   data() {
     return {
-      optType: 'add',
+      optType: '',
       ruleForm: {
         username: '',
         name: '',
@@ -56,7 +56,7 @@ export default {
       rules: {
         username: [
           { required: true, message: '请输入账号', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在3到5个字符', trigger: 'blur' }
+          { min: 1, max: 20, message: '长度在1到20个字符', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' }
@@ -90,28 +90,50 @@ export default {
       }
     }
   },
+  created() {
+    this.optType = this.$route.query.id ? 'update' : 'add'
+    if (this.optType === 'update') {
+      queryEmployeeById(this.$route.query.id).then(res => {
+        if (res.data.code === 1) {
+          this.ruleForm = res.data.data
+        }
+      })
+    }
+  },
   methods: {
     submitFormAgain(formName, continueAdd) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          addEmployee(this.ruleForm).then((res) => {
-            if (res.data.code === 1) {
-              this.$message.success('员工添加成功！')
-              if (continueAdd) {
-                this.ruleForm = {//重新设置回参数来
-                  name: '',
-                  username: '',
-                  sex: '1',
-                  phone: '',
-                  idNumber: ''
+          if (this.optType === 'add') {
+            addEmployee(this.ruleForm).then((res) => {
+              if (res.data.code === 1) {
+                this.$message.success('员工添加成功！')
+                if (continueAdd) {
+                  this.ruleForm = {//重新设置回参数来
+                    name: '',
+                    username: '',
+                    sex: '1',
+                    phone: '',
+                    idNumber: ''
+                  }
+                } else {
+                  this.$router.push('/employee') //路由跳转
                 }
               } else {
-                this.$router.push('/employee') //路由跳转
+                this.$message.error(res.data.msg)
               }
-            } else {
-              this.$message.error(res.data.msg)
-            }
-          })
+            })
+          } else {
+            editEmployee(this.ruleForm).then(res => {
+              if (res.data.code === 1) {
+                this.$message.success('员工修改成功！')
+              } else {
+                this.$message.error(res.data.msg || '员工修改失败！')
+              }
+            }).catch(() => {
+              this.$message.error('员工修改失败！')
+            })
+          }
         }
       })
     }

@@ -36,7 +36,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text">修改</el-button>
+            <el-button type="text" @click="handleUpdateEmp(scope.row)">修改</el-button>
             <el-button type="text" @click="handleStartOrStop(scope.row)">
               {{ scope.row.status === 0 ? '启用' : '禁用' }}
             </el-button>
@@ -133,6 +133,18 @@ export default {
     handleAddEmp(){
       //路由跳转，跳转到新增员工组件
       this.$router.push('/employee/add')
+    },
+    //跳转到新增员工页面（组件）
+    handleUpdateEmp(row){
+      if(row.username==='admin'){
+        this.$message.error('admin不允许修改')
+        return
+      }
+      //路由跳转，跳转到新增员工组件
+      this.$router.push({
+        path:'/employee/add',
+        query:{id: row.id}
+      })
     }
 
   }

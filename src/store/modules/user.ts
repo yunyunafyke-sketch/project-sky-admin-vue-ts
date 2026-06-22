@@ -19,6 +19,7 @@ export interface IUserState {
 
 // user 模块负责登录态、用户信息、角色和门店信息。
 @Module({ 'dynamic': true, store, 'name': 'user' })
+
 class User extends VuexModule implements IUserState {
   // 刷新页面后 Vuex 会丢失内存状态，所以 token/username 需要从 Cookie 恢复。
   public token = getToken() || ''
